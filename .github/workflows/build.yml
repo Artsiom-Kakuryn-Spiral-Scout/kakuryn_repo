@@ -59,7 +59,8 @@ jobs:
           VERSION=${{ steps.package-version.outputs.current-version }}
           BUILD_NUMBER=${{ github.run_number }}
           VERSION_WITH_BUILD=${VERSION}.${BUILD_NUMBER}
-          echo "::set-output name=version::${VERSION_WITH_BUILD}"
+          # echo "::set-output name=version::${VERSION_WITH_BUILD}"
+          echo "version=${VERSION_WITH_BUILD}" >> $GITHUB_OUTPUT
         
       # - name: Build Docker image with build number
       #   run: |
