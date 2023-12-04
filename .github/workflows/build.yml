@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to promote DAGs to'
+        description: 'Environment'
         required: true
         type: choice
         options:
@@ -14,7 +14,7 @@ on:
       deploy:
         use-emoji:
         type: boolean
-        description: Include 🎉🤣 emojis
+        description: "deploy to Environment :godmode:"
 
 
 permissions:
