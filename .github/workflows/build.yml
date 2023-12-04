@@ -1,0 +1,87 @@
+name: Push Latest V2 Image to dev ECR CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to promote DAGs to'
+        required: true
+        type: choice
+        options:
+          - DEV
+          - QA
+          - STG
+      deploy:
+        description: 'Deploy'
+        required: true
+        type: bool
+        defoult: false
+
+
+permissions:
+  id-token: write
+  contents: read
+
+#TODO replace env values with GitHub Secrets
+
+env:
+  AWS_REGION: us-east-1 #${{ secrets.AWS_REGION }}
+  ECR_REGISTRY: 1231.dkr.ecr.us-east-1.amazonaws.com #${{ secrets.ECR_REGISTRY }}
+  ECR_REPOSITORY: neo-dev-frontend #${{ secrets.ECR_REPOSITORY }}
+  ROLE_TO_ASSUME: arn:aws:iam::1231:role/ECR-GITHUB-OPEN-ID-CONNECT-ROLE #${{ secrets.ROLE_TO_ASSUME }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.16
+
+      # - name: Installing packages
+      #   run: npm ci
+
+      # - name: Bundling
+      #   run: npm run dist
+        
+      # - name: get-npm-version
+      #   id: package-version
+      #   uses: Sourcing-Value/npm-get-version-action@1.4.0
+
+      - name: Get project version
+        id: set-version
+        run: |
+          VERSION=${{ steps.package-version.outputs.current-version }}
+          BUILD_NUMBER=${{ github.run_number }}
+          VERSION_WITH_BUILD=${VERSION}.${BUILD_NUMBER}
+          echo "::set-output name=version::${VERSION_WITH_BUILD}"
+        
+      # - name: Build Docker image with build number
+      #   run: |
+      #     docker build --platform linux/amd64 -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }} -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest .
+      # - name: Configure AWS credentials with OIDC
+      #   uses: aws-actions/configure-aws-credentials@v2
+      #   with:
+      #     role-to-assume: ${{ env.ROLE_TO_ASSUME }}
+      #     aws-region: ${{ env.AWS_REGION }}
+
+      # - name: Login to AWS ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Push Docker image
+        run: |
+          echo ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
+          echo ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+          # docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
+          # docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+
+  deploy:
+    needs: build-and-push
+    if: ${{inputs.deploy}} == 'true'
+    name: Deploy web-server
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: ${{inputs.environment}}

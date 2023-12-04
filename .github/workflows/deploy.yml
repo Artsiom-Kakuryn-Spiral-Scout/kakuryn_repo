@@ -1,0 +1,31 @@
+name: Deploy env
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+
+
+permissions:
+  id-token: write
+  contents: read
+
+#TODO replace env values with GitHub Secrets
+
+env:
+  AWS_REGION: us-east-1 #${{ secrets.AWS_REGION }}
+  ECR_REGISTRY: 1234.dkr.ecr.us-east-1.amazonaws.com #${{ secrets.ECR_REGISTRY }}
+  ECR_REPOSITORY: neo-dev-frontend #${{ secrets.ECR_REPOSITORY }}
+  ROLE_TO_ASSUME: arn:aws:iam::1234:role/ECR-GITHUB-OPEN-ID-CONNECT-ROLE #${{ secrets.ROLE_TO_ASSUME }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: deploy
+        run: echo "deploy"
+
