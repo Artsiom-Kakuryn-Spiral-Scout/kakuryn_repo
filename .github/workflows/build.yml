@@ -84,7 +84,7 @@ jobs:
 
   deploy:
     needs: build-and-push
-    if: ${{ inputs.deploy }} == 'true'
+    if: ${{ inputs.deploy }} == true
     name: Deploy web-server
     uses: ./.github/workflows/deploy.yml
     with:
