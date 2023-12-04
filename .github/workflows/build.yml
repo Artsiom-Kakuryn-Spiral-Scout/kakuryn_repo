@@ -29,7 +29,7 @@ permissions:
 env:
   AWS_REGION: us-east-1 #${{ secrets.AWS_REGION }}
   ECR_REGISTRY: 1231.dkr.ecr.us-east-1.amazonaws.com #${{ secrets.ECR_REGISTRY }}
-  ECR_REPOSITORY: neo-dev-frontend #${{ secrets.ECR_REPOSITORY }}
+  # ECR_REPOSITORY: neo-dev-frontend #${{ secrets.ECR_REPOSITORY }}
   ROLE_TO_ASSUME: arn:aws:iam::1231:role/ECR-GITHUB-OPEN-ID-CONNECT-ROLE #${{ secrets.ROLE_TO_ASSUME }}
 
 jobs:
@@ -53,39 +53,42 @@ jobs:
       #   id: package-version
       #   uses: Sourcing-Value/npm-get-version-action@1.4.0
 
-      - name: Get get ECR Repository
-        id: get-repository
+      - name: Get ECR Repository
+        id: set-repository
         run: |
           case ${{inputs.environment}} in
-
             NEO-DEV)
-              echo -n "test1"
+              echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
               ;;
-
             NEO-INTERNAL-UAT)
-              echo -n "test2"
+              echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
               ;;
-
             NEO-QA)
-              echo -n "Italian"
+              echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
               ;;
-
-            *)
-              echo -n "unknown"
+            sova-demo-ecs)
+              echo "ECR_REPOSITORY=sova-dev-frontend" >> $GITHUB_OUTPUT
+              ;;
+            sova-internal-uat-ecs)
+              echo "ECR_REPOSITORY=sova-dev-frontend" >> $GITHUB_OUTPUT
+              ;;
+            NEO-DEMO)
+              echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
               ;;
           esac
 
-      - name: Get project version
+      - name: Get ECR, project version 
         id: set-version
         run: |
           VERSION=${{ steps.package-version.outputs.current-version }}
           BUILD_NUMBER=${{ github.run_number }}
           VERSION_WITH_BUILD=${VERSION}.${BUILD_NUMBER}
           echo "version=${VERSION_WITH_BUILD}" >> $GITHUB_OUTPUT
+          echo "ECR=${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}" >> $GITHUB_OUTPUT
         
       # - name: Build Docker image with build number
       #   run: |
-      #     docker build --platform linux/amd64 -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }} -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest .
+      #     docker build --platform linux/amd64 -t ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }} -t ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest .
       # - name: Configure AWS credentials with OIDC
       #   uses: aws-actions/configure-aws-credentials@v2
       #   with:
@@ -98,10 +101,11 @@ jobs:
 
       - name: Push Docker image
         run: |
-          echo ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
-          echo ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
-          # docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
-          # docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+          echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
+          echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
+          echo ${{ steps.set-version.outputs.ECR }}:${{ steps.set-version.outputs.version }}
+          # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
+          # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
 
   deploy:
     needs: build-and-push
