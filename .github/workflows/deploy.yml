@@ -6,6 +6,9 @@ on:
       environment:
         type: string
         required: true
+      image:
+        type: string
+        required: true
 
 
 permissions:
@@ -27,5 +30,7 @@ jobs:
     steps:
 
       - name: deploy
-        run: echo "deploy"
+        run: |
+          echo ${{inputs.environment}}
+          echo ${{inputs.image}}
 
