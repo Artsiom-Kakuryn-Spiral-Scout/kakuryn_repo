@@ -1,4 +1,4 @@
-name: Push Latest V2 Image to dev ECR CI
+name: Build and push web-server image
 
 on:
   workflow_dispatch:
