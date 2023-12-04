@@ -17,6 +17,7 @@ on:
       deploy:
         type: boolean
         description: '🎅Deploy to the Environment🎅'
+        default: false
 
 
 permissions:
@@ -82,7 +83,7 @@ jobs:
 
   deploy:
     needs: build-and-push
-    if: ${{ inputs.deploy }} == 'true'
+    if: ${{ inputs.deploy }} == true
     name: Deploy web-server
     uses: ./.github/workflows/deploy.yml
     with:
