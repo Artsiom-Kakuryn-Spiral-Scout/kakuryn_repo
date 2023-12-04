@@ -12,10 +12,9 @@ on:
           - QA
           - STG
       deploy:
-        description: 'Deploy'
-        required: true
-        type: bool
-        defoult: false
+        use-emoji:
+        type: boolean
+        description: Include 🎉🤣 emojis
 
 
 permissions:
