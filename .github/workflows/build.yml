@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment'
+        description: '🎅Environment:🎅'
         required: true
         type: choice
         options:
@@ -14,7 +14,7 @@ on:
       deploy:
         use-emoji:
         type: boolean
-        description: "deploy to Environment :godmode:"
+        description: '🎅Deploy to the Environment🎅'
 
 
 permissions:
