@@ -8,11 +8,13 @@ on:
         required: true
         type: choice
         options:
-          - DEV
-          - QA
-          - STG
+          - NEO-DEV
+          - NEO-INTERNAL-UAT
+          - NEO-QA
+          - sova-demo-ecs
+          - sova-internal-uat-ecs
+          - NEO-DEMO
       deploy:
-        use-emoji:
         type: boolean
         description: '🎅Deploy to the Environment🎅'
 
