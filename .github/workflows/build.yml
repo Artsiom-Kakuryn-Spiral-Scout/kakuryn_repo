@@ -29,7 +29,6 @@ permissions:
 env:
   AWS_REGION: us-east-1 #${{ secrets.AWS_REGION }}
   ECR_REGISTRY: 1231.dkr.ecr.us-east-1.amazonaws.com #${{ secrets.ECR_REGISTRY }}
-  # ECR_REPOSITORY: neo-dev-frontend #${{ secrets.ECR_REPOSITORY }}
   ROLE_TO_ASSUME: arn:aws:iam::1231:role/ECR-GITHUB-OPEN-ID-CONNECT-ROLE #${{ secrets.ROLE_TO_ASSUME }}
 
 jobs:
@@ -37,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image_version: ${{ steps.set-version.outputs.version }}
+    
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -52,6 +52,11 @@ jobs:
       # - name: get-npm-version
       #   id: package-version
       #   uses: Sourcing-Value/npm-get-version-action@1.4.0
+
+      - name: Temp
+        id: Temp
+        run: |
+          echo ${{GITHUB_HEAD_REF}}
 
       - name: Get ECR Repository
         id: set-repository
@@ -104,6 +109,7 @@ jobs:
           echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
           echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
           echo ${{ steps.set-version.outputs.ECR }}:${{ steps.set-version.outputs.version }}
+          echo ${{ steps.set-version.outputs.ECR }}:latest
           # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
           # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
 
