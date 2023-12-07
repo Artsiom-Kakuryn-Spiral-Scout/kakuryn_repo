@@ -56,7 +56,7 @@ jobs:
       - name: Temp
         id: Temp
         run: |
-          echo ${{GITHUB_HEAD_REF}}
+          echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
 
       - name: Get ECR Repository
         id: set-repository
