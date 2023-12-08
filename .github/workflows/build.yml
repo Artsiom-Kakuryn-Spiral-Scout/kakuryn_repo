@@ -96,9 +96,9 @@ jobs:
 
       - name: Push Docker image
         run: |
-          echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
+          echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}-$GITHUB_SHA
           echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
-          echo ${{ steps.set-version.outputs.ECR }}:${{ steps.set-version.outputs.version }}
+          echo ${{ steps.set-version.outputs.ECR }}:${{ steps.set-version.outputs.version }}-$GITHUB_SHA
           echo ${{ steps.set-version.outputs.ECR }}:latest
           # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
           # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
