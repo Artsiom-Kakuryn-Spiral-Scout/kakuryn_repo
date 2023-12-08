@@ -61,23 +61,13 @@ jobs:
       - name: Get ECR Repository
         id: set-repository
         run: |
-          case ${{inputs.environment}} in
-            NEO-DEV)
+          case ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} in
+            master)
+              echo prod
               echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
               ;;
-            NEO-INTERNAL-UAT)
-              echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
-              ;;
-            NEO-QA)
-              echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
-              ;;
-            sova-demo-ecs)
-              echo "ECR_REPOSITORY=sova-dev-frontend" >> $GITHUB_OUTPUT
-              ;;
-            sova-internal-uat-ecs)
-              echo "ECR_REPOSITORY=sova-dev-frontend" >> $GITHUB_OUTPUT
-              ;;
-            NEO-DEMO)
+            *)
+              echo nonprod
               echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
               ;;
           esac
