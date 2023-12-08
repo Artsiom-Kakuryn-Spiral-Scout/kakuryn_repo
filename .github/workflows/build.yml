@@ -77,7 +77,7 @@ jobs:
         run: |
           VERSION=${{ steps.package-version.outputs.current-version }}
           BUILD_NUMBER=${{ github.run_number }}
-          VERSION_WITH_BUILD=${VERSION}.${BUILD_NUMBER}
+          VERSION_WITH_BUILD=${VERSION}.${BUILD_NUMBER}.$(git rev-parse --short HEAD)
           echo "version=${VERSION_WITH_BUILD}" >> $GITHUB_OUTPUT
           echo "ECR=${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}" >> $GITHUB_OUTPUT
         
@@ -96,9 +96,9 @@ jobs:
 
       - name: Push Docker image
         run: |
-          echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}-$GITHUB_SHA
+          echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
           echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
-          echo ${{ steps.set-version.outputs.ECR }}:${{ steps.set-version.outputs.version }}-$GITHUB_SHA
+          echo ${{ steps.set-version.outputs.ECR }}:${{ steps.set-version.outputs.version }}
           echo ${{ steps.set-version.outputs.ECR }}:latest
           # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
           # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
