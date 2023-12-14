@@ -17,7 +17,7 @@ on:
       deploy:
         type: boolean
         description: '🎅Deploy to the Environment🎅'
-        default: 'false'
+        default: false
 
 
 permissions:
@@ -64,11 +64,11 @@ jobs:
           case ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} in
             master)
               echo prod
-              echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
+              echo "ECR_REPOSITORY=sv-frontend-prod" >> $GITHUB_OUTPUT
               ;;
             *)
               echo nonprod
-              echo "ECR_REPOSITORY=neo-dev-frontend" >> $GITHUB_OUTPUT
+              echo "ECR_REPOSITORY=sv-frontend-dev" >> $GITHUB_OUTPUT
               ;;
           esac
 
