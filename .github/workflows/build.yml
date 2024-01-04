@@ -108,6 +108,7 @@ jobs:
     if: ${{ inputs.deploy == true }} 
     name: Deploy web-server
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit
     with:
       environment: ${{inputs.environment}}
       image: ${{needs.build-and-push.outputs.image_version}}
