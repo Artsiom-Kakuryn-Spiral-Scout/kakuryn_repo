@@ -30,6 +30,8 @@ env:
   AWS_REGION: us-east-1 #${{ secrets.AWS_REGION }}
   ECR_REGISTRY: 1231.dkr.ecr.us-east-1.amazonaws.com #${{ secrets.ECR_REGISTRY }}
   ROLE_TO_ASSUME: arn:aws:iam::1231:role/ECR-GITHUB-OPEN-ID-CONNECT-ROLE #${{ secrets.ROLE_TO_ASSUME }}
+  PROD_ALLOW: ("Artsiom-Kakuryn-Spiral-Scout" "yasingedik-avg")
+  QA_UAT_ALLOW: ("yasingedik-avg" "askd")
 
 jobs:
   build-and-push:
@@ -57,29 +59,35 @@ jobs:
         id: Temp
         run: |
           echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          # if
+          # [[ ${{ env.PROD_ALLOW }}[0] =~ ${{github.actor}} ]]; then
+          # echo "it's working"
+          # fi
+          echo "User: ${{github.actor}}"
+          echo ${{ env.PROD_ALLOW[0] }}
 
-      - name: Get ECR Repository
-        id: set-repository
-        run: |
-          case ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} in
-            master)
-              echo prod
-              echo "ECR_REPOSITORY=sv-frontend-prod" >> $GITHUB_OUTPUT
-              ;;
-            *)
-              echo nonprod
-              echo "ECR_REPOSITORY=sv-frontend-dev" >> $GITHUB_OUTPUT
-              ;;
-          esac
+      # - name: Get ECR Repository
+      #   id: set-repository
+      #   run: |
+      #     case ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} in
+      #       master)
+      #         echo prod
+      #         echo "ECR_REPOSITORY=sv-frontend-prod" >> $GITHUB_OUTPUT
+      #         ;;
+      #       *)
+      #         echo nonprod
+      #         echo "ECR_REPOSITORY=sv-frontend-dev" >> $GITHUB_OUTPUT
+      #         ;;
+      #     esac
 
-      - name: Get ECR, project version 
-        id: set-version
-        run: |
-          VERSION=${{ steps.package-version.outputs.current-version }}
-          BUILD_NUMBER=${{ github.run_number }}
-          VERSION_WITH_BUILD=${VERSION}.${BUILD_NUMBER}.$(git rev-parse --short HEAD)
-          echo "version=${VERSION_WITH_BUILD}" >> $GITHUB_OUTPUT
-          echo "ECR=${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}" >> $GITHUB_OUTPUT
+      # - name: Get ECR, project version 
+      #   id: set-version
+      #   run: |
+      #     VERSION=${{ steps.package-version.outputs.current-version }}
+      #     BUILD_NUMBER=${{ github.run_number }}
+      #     VERSION_WITH_BUILD=${VERSION}.${BUILD_NUMBER}.$(git rev-parse --short HEAD)
+      #     echo "version=${VERSION_WITH_BUILD}" >> $GITHUB_OUTPUT
+      #     echo "ECR=${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}" >> $GITHUB_OUTPUT
         
       # - name: Build Docker image with build number
       #   run: |
@@ -94,22 +102,22 @@ jobs:
       #   id: login-ecr
       #   uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Push Docker image
-        run: |
-          echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
-          echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
-          echo ${{ steps.set-version.outputs.ECR }}:${{ steps.set-version.outputs.version }}
-          echo ${{ steps.set-version.outputs.ECR }}:latest
-          # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
-          # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
+  #     - name: Push Docker image
+  #       run: |
+  #         echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
+  #         echo ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
+  #         echo ${{ steps.set-version.outputs.ECR }}:${{ steps.set-version.outputs.version }}
+  #         echo ${{ steps.set-version.outputs.ECR }}:latest
+  #         # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
+  #         # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
 
-  deploy:
-    needs: build-and-push
-    if: ${{ inputs.deploy == true }} 
-    name: Deploy web-server
-    uses: ./.github/workflows/deploy.yml
-    secrets: inherit
-    with:
-      environment: ${{inputs.environment}}
-      image: ${{needs.build-and-push.outputs.image_version}}
+  # deploy:
+  #   needs: build-and-push
+  #   if: ${{ inputs.deploy == true }} 
+  #   name: Deploy web-server
+  #   uses: ./.github/workflows/deploy.yml
+  #   secrets: inherit
+  #   with:
+  #     environment: ${{inputs.environment}}
+  #     image: ${{needs.build-and-push.outputs.image_version}}
 
