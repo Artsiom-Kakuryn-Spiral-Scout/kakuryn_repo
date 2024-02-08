@@ -70,15 +70,15 @@ jobs:
                 users=${{ env.QA_ALLOW_DEPLOY }}
                 ;;
             esac
-            # for item in ${users[*]}
-            #   echo $item
-            #   do
-            #     if [[ "$item" == ${{ github.actor }} ]]; then
-            #       echo "User can deploy"
-            #     else
-            #       echo "User doesnt have enought permissions"
-            #     fi
-            # done
+            for item in ${users[*]}
+              echo "$item"
+              do
+                if [[ "$item" == ${{ github.actor }} ]]; then
+                  echo "User can deploy"
+                else
+                  echo "User doesnt have enought permissions"
+                fi
+            done
           fi
 
           echo "User: ${{github.actor}}"
