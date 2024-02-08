@@ -59,12 +59,15 @@ jobs:
         id: Temp
         run: |
           echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          if
-          [[ ${{ env.PROD_ALLOW[0] }} =~ ${{ github.actor }} ]]; then
-          echo "it's working"
-          fi
+          
+          array=${{ env.PROD_ALLOW }}
+          for item in ${array[*]}
+          do
+            if [[ "$item" == ${{ github.actor }} ]]; then
+              echo "it's working"
+            fi
+          done
           echo "User: ${{github.actor}}"
-          echo ${{ env.PROD_ALLOW[0] }}
 
       # - name: Get ECR Repository
       #   id: set-repository
