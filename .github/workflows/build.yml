@@ -71,7 +71,7 @@ jobs:
                 ;;
             esac
             for item in ${users[*]}
-              echo "$item"
+              # echo "$item"
               do
                 if [[ "$item" == ${{ github.actor }} ]]; then
                   echo "User can deploy"
