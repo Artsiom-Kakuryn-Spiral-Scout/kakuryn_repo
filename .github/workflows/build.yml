@@ -60,7 +60,7 @@ jobs:
         run: |
           echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
           
-          if [[ *"${{inputs.ENVIRONMENT}}"* == "NEO-DEMO NEO-QA NEO-INTERNAL-UAT" ]] ; then
+          if [[ "NEO-DEMO NEO-QA NEO-INTERNAL-UAT" == *"${{inputs.ENVIRONMENT}}"* ]] ; then
             echo "its work"
           fi
           array=${{ env.PROD_ALLOW }}
