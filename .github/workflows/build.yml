@@ -75,7 +75,7 @@ jobs:
                 if [[ "$item" == ${{ github.actor }} ]]; then
                   echo "User can deploy"
                   break
-                  ::exit::           
+                  exit 1         
                 fi
             done
             echo "User doesnt have enought permissions"
