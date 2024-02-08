@@ -30,8 +30,8 @@ env:
   AWS_REGION: us-east-1 #${{ secrets.AWS_REGION }}
   ECR_REGISTRY: 1231.dkr.ecr.us-east-1.amazonaws.com #${{ secrets.ECR_REGISTRY }}
   ROLE_TO_ASSUME: arn:aws:iam::1231:role/ECR-GITHUB-OPEN-ID-CONNECT-ROLE #${{ secrets.ROLE_TO_ASSUME }}
-  PROD_ALLOW: ("Kakoita_huy" "yasingedik-avg")
-  QA_UAT_ALLOW: ("yasingedik-avg" "askd")
+  NEO-DEMO_ALLOW_DEPLOY: ("Kakoita_huy" "yasingedik-avg")
+  NEO-QA_ALLOW_DEPLOY: ("yasingedik-avg" "askd")
 
 jobs:
   build-and-push:
@@ -63,8 +63,9 @@ jobs:
           if [[ "NEO-DEMO NEO-QA NEO-INTERNAL-UAT" == *"${{inputs.ENVIRONMENT}}"* ]] ; then
             echo "its work"
           fi
-          array=${{ env.PROD_ALLOW }}
+          array="${{ env.PROD_ALLOW }}_ALLOW_DEPLOY"
           for item in ${array[*]}
+          echo $item
           do
             if [[ "$item" == ${{ github.actor }} ]]; then
               echo "it's working"
