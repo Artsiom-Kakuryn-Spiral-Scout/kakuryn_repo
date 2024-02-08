@@ -59,10 +59,10 @@ jobs:
         id: Temp
         run: |
           echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          # if
-          # [[ ${{ env.PROD_ALLOW }}[0] =~ ${{github.actor}} ]]; then
-          # echo "it's working"
-          # fi
+          if
+          [[ ${{ env.PROD_ALLOW[0] }} =~ ${{ github.actor }} ]]; then
+          echo "it's working"
+          fi
           echo "User: ${{github.actor}}"
           echo ${{ env.PROD_ALLOW[0] }}
 
