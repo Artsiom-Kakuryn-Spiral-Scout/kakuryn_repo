@@ -30,7 +30,7 @@ env:
   AWS_REGION: us-east-1 #${{ secrets.AWS_REGION }}
   ECR_REGISTRY: 1231.dkr.ecr.us-east-1.amazonaws.com #${{ secrets.ECR_REGISTRY }}
   ROLE_TO_ASSUME: arn:aws:iam::1231:role/ECR-GITHUB-OPEN-ID-CONNECT-ROLE #${{ secrets.ROLE_TO_ASSUME }}
-  PROD_ALLOW: ("Artsiom-Kakuryn-Spiral-Scout" "yasingedik-avg")
+  PROD_ALLOW: ("Kakoita_huy" "yasingedik-avg")
   QA_UAT_ALLOW: ("yasingedik-avg" "askd")
 
 jobs:
