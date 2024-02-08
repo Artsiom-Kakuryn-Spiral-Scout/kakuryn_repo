@@ -74,7 +74,6 @@ jobs:
               do
                 if [[ "$item" == ${{ github.actor }} ]]; then
                   echo "User can deploy"
-                  break
                   exit 1         
                 fi
             done
