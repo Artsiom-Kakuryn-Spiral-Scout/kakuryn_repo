@@ -70,9 +70,9 @@ jobs:
                 users=${{ env.QA_ALLOW_DEPLOY }}
                 ;;
             esac
-            for item in ${users[*]}
+            for user in ${users[*]}
               do
-                if [[ "$item" == ${{ github.actor }} ]]; then
+                if [[ "$user" == ${{ github.actor }} ]]; then
                   echo "User can deploy"
                   exit 0         
                 fi
