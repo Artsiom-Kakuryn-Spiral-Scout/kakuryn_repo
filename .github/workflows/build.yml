@@ -71,14 +71,14 @@ jobs:
                 ;;
             esac
             for item in ${users[*]}
-              # echo "$item"
               do
                 if [[ "$item" == ${{ github.actor }} ]]; then
                   echo "User can deploy"
-                else
-                  echo "User doesnt have enought permissions"
+                  break
+                  ::exit::           
                 fi
             done
+            echo "User doesnt have enought permissions"
           fi
 
           echo "User: ${{github.actor}}"
