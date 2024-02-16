@@ -32,6 +32,7 @@ env:
   ROLE_TO_ASSUME: arn:aws:iam::1231:role/ECR-GITHUB-OPEN-ID-CONNECT-ROLE #${{ secrets.ROLE_TO_ASSUME }}
   # DEMO_ALLOW_DEPLOY: ("Artsiom-Kakuryn-Spiral-Scout" "yasingedik-avg")
   # QA_ALLOW_DEPLOY: ("yasingedik-avg" "askd")
+  INTERNAL_UAT_ALLOW_DEPLOY: ${{ vars.INTERNAL_UAT_ALLOW_DEPLOY }}
 
 jobs:
   build-and-push:
