@@ -64,7 +64,7 @@ jobs:
                 users=${{ secrets.DEMO_ALLOW_DEPLOY }}
                 ;;
               NEO-INTERNAL-UAT)
-                users=${{ secrets.INTERNAL_UAT_ALLOW_DEPLOY }}
+                users=${{ env.INTERNAL_UAT_ALLOW_DEPLOY }}
                 ;;
               NEO-QA)
                 users=${{ secrets.QA_ALLOW_DEPLOY }}
