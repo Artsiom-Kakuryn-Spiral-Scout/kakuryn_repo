@@ -58,30 +58,27 @@ jobs:
       - name: Temp
         id: Temp
         run: |
-          echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          
-          if [[ "NEO-DEMO NEO-QA NEO-INTERNAL-UAT" == *"${{inputs.ENVIRONMENT}}"* ]] ; then
-            echo "its work"
+          if [[ ${{ secrets.PROTECTED_ENVIRONMENTS }} == *"${{inputs.ENVIRONMENT}}"* ]] ; then
             case ${{inputs.ENVIRONMENT}} in
               NEO-DEMO)
-                users=${{ env.DEMO_ALLOW_DEPLOY }}
+                users=${{ secrets.DEMO_ALLOW_DEPLOY }}
+                ;;
+              NEO-INTERNAL-UAT)
+                users=${{ secrets.INTERNAL_UAT_ALLOW_DEPLOY }}
                 ;;
               NEO-QA)
-                users=${{ env.QA_ALLOW_DEPLOY }}
+                users=${{ secrets.QA_ALLOW_DEPLOY }}
                 ;;
             esac
             for user in ${users[*]}
               do
                 if [[ "$user" == ${{ github.actor }} ]]; then
-                  echo "User can deploy"
-                  exit 0         
+                  exit 0
                 fi
             done
-            echo "User doesnt have enought permissions"
+            echo "::error:: User ${{ github.actor }} doesn't have access deploy to ${{inputs.ENVIRONMENT}} environment"
             exit 1
           fi
-
-          echo "User: ${{github.actor}}"
 
       # - name: Get ECR Repository
       #   id: set-repository
