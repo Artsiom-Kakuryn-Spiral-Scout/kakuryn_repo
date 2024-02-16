@@ -30,8 +30,8 @@ env:
   AWS_REGION: us-east-1 #${{ secrets.AWS_REGION }}
   ECR_REGISTRY: 1231.dkr.ecr.us-east-1.amazonaws.com #${{ secrets.ECR_REGISTRY }}
   ROLE_TO_ASSUME: arn:aws:iam::1231:role/ECR-GITHUB-OPEN-ID-CONNECT-ROLE #${{ secrets.ROLE_TO_ASSUME }}
-  DEMO_ALLOW_DEPLOY: ("Artsiom-Kakuryn-Spiral-Scout" "yasingedik-avg")
-  QA_ALLOW_DEPLOY: ("yasingedik-avg" "askd")
+  # DEMO_ALLOW_DEPLOY: ("Artsiom-Kakuryn-Spiral-Scout" "yasingedik-avg")
+  # QA_ALLOW_DEPLOY: ("yasingedik-avg" "askd")
 
 jobs:
   build-and-push:
