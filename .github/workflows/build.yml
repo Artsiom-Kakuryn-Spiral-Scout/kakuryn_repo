@@ -1,4 +1,4 @@
-name: Build and push web-server image
+name: Build and push web-server imagev2
 
 on:
   workflow_dispatch:
