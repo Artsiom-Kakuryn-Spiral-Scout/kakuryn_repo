@@ -104,8 +104,12 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           tag: 1.1.${{ github.run_number }}
-          artifacts: "release.tar.gz,foo/*.txt"
-          bodyFile: "body.md"
+          artifacts: "release.tar.gz,temp_folder/*"
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+
 
       # - name: Get ECR Repository
       #   id: set-repository
