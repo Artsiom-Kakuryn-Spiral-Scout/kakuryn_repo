@@ -23,7 +23,6 @@ on:
 permissions:
   id-token: write
   contents: write
-  # packages: write
 
 #TODO replace env values with GitHub Secrets
 
@@ -82,13 +81,18 @@ jobs:
             exit 1
           fi
 
+      - name: Create file
+        run: |
+          mkdir temp_folder
+          touch temp_folder/file.txt
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: 1.1.12
+          tag_name: 1.1.${{ github.run_number }}
           release_name: Release test
           body: |
             Changes in this Release
