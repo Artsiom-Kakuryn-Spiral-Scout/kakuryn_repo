@@ -85,7 +85,7 @@ jobs:
         run: |
           mkdir temp_folder
           touch temp_folder/file.txt
-          tar -czvf temp_folder.tar.gz temp_folder/
+          tar -czvf temp_folder.tar.gz temp_folder/*
           ls
 
       - name: Create Release
