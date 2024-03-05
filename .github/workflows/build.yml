@@ -103,15 +103,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist.tar.gz
-          asset_name: dist.tar.gz
-          tag: 1.1.${{ github.run_number }}
-          overwrite: true
-          body: "This is my release text"
+
 
       # - uses: ncipollo/release-action@v1
       #   with:
@@ -168,13 +160,13 @@ jobs:
   #         # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:${{ steps.set-version.outputs.version }}
   #         # docker push ${{ env.ECR_REGISTRY }}/${{ steps.set-repository.outputs.ECR_REPOSITORY }}:latest
 
-  # deploy:
-  #   needs: build-and-push
-  #   if: ${{ inputs.deploy == true }} 
-  #   name: Deploy web-server
-  #   uses: ./.github/workflows/deploy.yml
-  #   secrets: inherit
-  #   with:
-  #     environment: ${{inputs.environment}}
-  #     image: ${{needs.build-and-push.outputs.image_version}}
+  deploy:
+    needs: build-and-push
+    if: ${{ inputs.deploy == true }} 
+    name: Deploy web-server
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: ${{inputs.environment}}
+      image: "1.1.${{ github.run_number }}"
 
