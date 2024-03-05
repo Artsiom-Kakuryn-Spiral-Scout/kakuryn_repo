@@ -43,6 +43,8 @@ jobs:
     - name: deploy
       run: |
         ls -la
+        tar -xvzf dist.tar.gz
+        la -la
       
       # - name: Login to AWS ECR
       #   id: login-ecr

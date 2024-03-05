@@ -38,13 +38,19 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     outputs:
-      image_version: ${{ steps.set-version.outputs.version }}
+      tag_name: ${{ steps.prepare_param.outputs.TAG_NAME }}
     
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16.16
+
+      - name: Prepare parameters
+        id: prepare_param
+        run: |
+          PACKAGE_VERSION=$(cat package.json | jq -r '.version')
+          echo "TAG_NAME=$PACKAGE_VERSION.${{ github.run_number }}" >> $GITHUB_OUTPUT
 
       # - name: Installing packages
       #   run: npm ci
@@ -94,12 +100,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: 1.1.${{ github.run_number }}
-          release_name: 1.1.1.${{ github.run_number }}
+          tag_name: ${{ steps.prepare_param.outputs.TAG_NAME }}
+          release_name: "Build release. Release tag: "
           body: |
             Changes in this Release
-            - First Change
-            - Second Change
+            - Environment: ${{inputs.ENVIRONMENT}}
+            - Target branch: $(git rev-parse --short HEAD)
           draft: false
           prerelease: false
 
@@ -109,18 +115,10 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: dist.tar.gz
           asset_name: dist.tar.gz
-          tag: 1.1.${{ github.run_number }}
+          tag: ${{ steps.prepare_param.outputs.TAG_NAME }}
           overwrite: true
           body: "This is my release text"
 
-      # - uses: ncipollo/release-action@v1
-      #   with:
-      #     tag: 1.1.${{ github.run_number }}
-      #     artifacts: "release.tar.gz,temp_folder/*"
-      #     body: |
-      #       Changes in this Release
-      #       - First Change
-      #       - Second Change
 
 
       # - name: Get ECR Repository
@@ -176,5 +174,5 @@ jobs:
     secrets: inherit
     with:
       environment: ${{inputs.environment}}
-      image: 1.1.${{ github.run_number }}
+      image: ${{needs.build-and-push.outputs.tag_name}}
 
