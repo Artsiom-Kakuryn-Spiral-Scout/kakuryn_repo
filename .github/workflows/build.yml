@@ -22,8 +22,8 @@ on:
 
 permissions:
   id-token: write
-  contents: read
-  packages: write
+  contents: write
+  # packages: write
 
 #TODO replace env values with GitHub Secrets
 
