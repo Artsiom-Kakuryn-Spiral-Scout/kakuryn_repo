@@ -86,29 +86,39 @@ jobs:
           mkdir temp_folder
           touch temp_folder/file.txt
 
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@latest
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      #   with:
-      #     tag_name: 1.1.${{ github.run_number }}
-      #     release_name: Release test
-      #     body: |
-      #       Changes in this Release
-      #       - First Change
-      #       - Second Change
-      #     draft: false
-      #     prerelease: false
-
-      - uses: ncipollo/release-action@v1
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag: 1.1.${{ github.run_number }}
-          artifacts: "release.tar.gz,temp_folder/*"
+          tag_name: 1.1.${{ github.run_number }}
+          release_name: Release test
           body: |
             Changes in this Release
             - First Change
             - Second Change
+          draft: false
+          prerelease: false
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: temp_folder/file.txt
+          asset_name: mything
+          tag: 1.1.${{ github.run_number }}
+          overwrite: true
+          body: "This is my release text"
+
+      # - uses: ncipollo/release-action@v1
+      #   with:
+      #     tag: 1.1.${{ github.run_number }}
+      #     artifacts: "release.tar.gz,temp_folder/*"
+      #     body: |
+      #       Changes in this Release
+      #       - First Change
+      #       - Second Change
 
 
       # - name: Get ECR Repository
