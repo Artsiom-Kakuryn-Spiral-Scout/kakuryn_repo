@@ -94,6 +94,7 @@ jobs:
         run: |
           mkdir dist
           touch dist/file.txt
+          echo "test branch" >> dist/file.txt
           tar -czvf dist.tar.gz dist
           ls
 
