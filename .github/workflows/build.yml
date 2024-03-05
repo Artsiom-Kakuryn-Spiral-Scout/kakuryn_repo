@@ -108,7 +108,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: temp_folder.tar.gz
-          asset_name: mything
+          asset_name: temp_folder.tar.gz
           tag: 1.1.${{ github.run_number }}
           overwrite: true
           body: "This is my release text"
