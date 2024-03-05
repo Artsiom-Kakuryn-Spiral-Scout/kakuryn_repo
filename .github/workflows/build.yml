@@ -50,7 +50,9 @@ jobs:
         id: prepare_param
         run: |
           PACKAGE_VERSION=$(cat package.json | jq -r '.version')
-          echo "TAG_NAME=$PACKAGE_VERSION.${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "TAG_NAME=$PACKAGE_VERSION.build.${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "BRANCH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          
 
       # - name: Installing packages
       #   run: npm ci
@@ -102,10 +104,6 @@ jobs:
         with:
           tag_name: ${{ steps.prepare_param.outputs.TAG_NAME }}
           release_name: "Build release. Release tag: ${{ steps.prepare_param.outputs.TAG_NAME }}"
-          # body: |
-          #   Changes in this Release
-          #   - Environment: ${{inputs.ENVIRONMENT}}
-          #   - Target branch: $(git rev-parse --short HEAD)
           draft: false
           prerelease: false
 
@@ -120,7 +118,7 @@ jobs:
           body: |
             Changes in this Release
             - Environment: ${{inputs.ENVIRONMENT}}
-            - Target branch: $(git rev-parse --short HEAD)
+            - Target branch: ${{ steps.prepare_param.outputs.BRANCH }}
 
 
 

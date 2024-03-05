@@ -44,7 +44,7 @@ jobs:
       run: |
         ls -la
         tar -xvzf dist.tar.gz
-        ls -la
+        ls -la dist
       
       # - name: Login to AWS ECR
       #   id: login-ecr
