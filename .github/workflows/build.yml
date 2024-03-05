@@ -116,7 +116,7 @@ jobs:
           tag: ${{ steps.prepare_param.outputs.TAG_NAME }}
           overwrite: true
           body: |
-            Changes in this Release
+            Release info:
             - Environment: ${{inputs.ENVIRONMENT}}
             - Target branch: ${{ steps.prepare_param.outputs.BRANCH }}
 
