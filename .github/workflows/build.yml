@@ -83,10 +83,10 @@ jobs:
 
       - name: Create file
         run: |
-          mkdir temp_folder
-          touch temp_folder/file.txt
-          # tar -czvf temp_folder.tar.gz temp_folder/*
-          # ls
+          mkdir dist
+          touch dist/file.txt
+          tar -czvf dist.tar.gz dist/*
+          ls
 
       - name: Create Release
         id: create_release
@@ -107,8 +107,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "temp_folder/*"
-          asset_name: temp_folder
+          file: dist.tar.gz
+          asset_name: dist.tar.gz
           tag: 1.1.${{ github.run_number }}
           overwrite: true
           body: "This is my release text"
