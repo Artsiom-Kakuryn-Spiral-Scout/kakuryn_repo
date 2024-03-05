@@ -114,7 +114,7 @@ jobs:
           tag: ${{ steps.prepare_param.outputs.TAG_NAME }}
           name: "Build release: ${{ steps.prepare_param.outputs.TAG_NAME }}"
           artifacts: "dist.tar.gz"
-          draft: false
+          draft: true
           prerelease: false
           body: |
             Release info:
